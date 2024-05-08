@@ -1,75 +1,61 @@
 package Archive;
+import java.util.*;
+import java.io.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+class Main {
+    static int N,M;
 
-public class Main {
-    static int N,M,V;
+    static int[] dx = {1,-1, 0, 0};
+    static int[] dy = {0,0,1,-1};
 
-    static int[][] graph = new int[1001][1001];
-
-    static boolean[] visited = new boolean[1001];
-
-    static Queue<Integer> q = new LinkedList<>();
-
-    static void dfs(int current) {
-        if(visited[current]) {
-            return;
-        }
-        System.out.print("" + current + " ");
-        visited[current] = true;
-
-        for (int i = 1; i<1001; i++) {
-            if(graph[current][i] == 1) {
-                dfs(i);
-            }
-        }
-    }
-
-    static void bfs(int start) {
+    static int bfs(int[][] graph, boolean[][] visited) {
+        Queue<Integer[]> q = new LinkedList<>();
+        visited[1][1] = true;
+        Integer[] start = {1,1,1};
         q.offer(start);
-        visited[start] = true;
 
-        while(!q.isEmpty()) {
-            int current = q.poll();
-            System.out.print("" + current + " ");
+        while (!q.isEmpty()){
+            Integer[] current = q.poll();
+            int x = current[0];
+            int y = current[1];
+            int cnt = current[2];
 
-            for (int i = 1; i<1001; i++) {
-                if(graph[current][i] == 1) {
-                    if (!visited[i]) {
-                        visited[i] = true;
-                        q.offer(i);
-                    }
+            if(x == M && y == N) {
+                return cnt;
+            }
+            
+            for (int i = 0; i<4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+    
+                if (graph[ny][nx] == 1 && !visited[ny][nx]) {
+                    Integer[] next = {nx,ny,cnt+1};
+                    
+                    q.offer(next);
+                    visited[ny][nx] = true;
                 }
             }
         }
+        return -1;
     }
 
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        V = Integer.parseInt(st.nextToken());
-        
-        for (int i = 0 ; i<M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            graph[a][b] = 1;
-            graph[b][a] = 1;
+
+        int[][] graph = new int[N+2][M+2];
+        boolean[][] visited = new boolean[N+2][M+2];
+
+        for (int i = 0; i< N; i++) {
+            String line = br.readLine();
+            for (int j = 0; j<M; j++) {
+                graph[i+1][j+1] = line.charAt(j) -'0';
+            }
         }
 
-        dfs(V);
-
-        visited = new boolean[1001];
-        System.out.println();
-        bfs(V);
-
+        System.out.println("" + bfs(graph,visited));
     }
 }
