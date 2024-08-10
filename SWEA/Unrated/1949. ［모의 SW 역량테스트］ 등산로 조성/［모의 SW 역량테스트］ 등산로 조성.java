@@ -93,52 +93,65 @@ class Solution
             }
             int prev = map[y][x];
 
-            // 작게 하는경우 K가 충분한지 확인 else->continue
+            //비교대상과 같다면
             if(map[ny][nx] == map[y][x]) {
-                //xy 작게
+                //K는 최소 1이므로 그냥 1깎기
                 map[y][x] -=1;
                 int result = forDFS(map);
-                if(longestWay < result) {
-                    longestWay = result;
-                }
-                //longest 갱신
                 
-                //본인이 더 큰경우
-            }else if (map[ny][nx] < map[y][x]) {
-                //그대로
-                int result = forDFS(map);
+                //longest 갱신
                 if(longestWay < result) {
                     longestWay = result;
                 }
-                //xy 작게
+               
+            //비교대상보다 본인이 더 큰경우
+            }else if (map[ny][nx] < map[y][x]) {
+                //먼저 그대로 실행
+                int result = forDFS(map);
+
+                //longest 갱신
+                if(longestWay < result) {
+                    longestWay = result;
+                }
+
+                //롤백
                 map[y][x] = prev;
+
                 //본인이 더 크고, 본인에서 k를 뺐을때 옆보다 작아진다면 
                 if(map[y][x] -k < map[ny][nx]) {
+
+                    //비교대상에서 올수 있게만 해주면 되기때문에 -1
                     map[y][x] = map[ny][nx]-1;
                     int result2 = forDFS(map);
+
+                    //longest 갱신
                     if(longestWay < result2) {
                         longestWay = result2;
                     }
                 }
                 
-
+            //비교대상보다 본인이 더 작은경우
             }else if (map[ny][nx] > map[y][x]) {
                 //그대로
                 int result = forDFS(map);
+
+                //longest 갱신
                 if(longestWay < result) {
                     longestWay = result;
                 }
             }
-            //롤백
 
+            //롤백
             map[y][x] = prev;
         }
     }
 
 
     //최대길이 등산로 반환
-    //사실 최대길이는 BFS로 구하면 안됨, BFS는 최단거리를 보장하지만 최장거리는 알 수 없음
+    //사실 최대길이는 BFS로 구하면 안됨, BFS는 최단거리를 보장하지만 최장거리는 알 수 없음??
     //다만, 이 문제의 경우 뒤로 돌아갈 수 없기 때문에 가능하다.
+
+    //라고 생각했는데 dfs도 구현해보니 그냥 비슷함, 그냥 이문제는 visited없는 문제인듯 하다
     static int BFS(int[][]map) {
         int N = map.length;
         int looong = 0;
@@ -187,8 +200,6 @@ class Solution
         }
         return longestWayForDFS;
     }
-    
-    
     static void DFS(int x, int y, int N, int d, int[][]map) {
         
         for(int i = 0; i<4; i++) {
