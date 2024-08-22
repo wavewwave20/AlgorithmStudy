@@ -54,14 +54,18 @@ public class Solution {
         //3개월
         if(index >= 11) {
             planCal(plan, sum + threeMonthFee, 13);
-        }else {
+        }else if(fee > sum + threeMonthFee) {
             planCal(plan, sum + threeMonthFee, index+3);
         }
-
+    
         //월권
-        planCal(plan, sum + monthFee, index+1);
+        if(fee > sum + monthFee) {
+            planCal(plan, sum + monthFee, index+1);
+        }
 
         //일권
-        planCal(plan, sum + dayFee * plan[index], index+1);
+        if(fee > sum + dayFee * plan[index]) {
+            planCal(plan, sum + dayFee * plan[index], index+1);
+        }
     }
 }
