@@ -1,82 +1,64 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Solution {
-    static int []parents;
-    static int V, E;
-
-    public static void main(String[] args) throws IOException{
-        
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        int tc = Integer.parseInt(br.readLine());
-        
-        for(int T = 1; T<=tc ; T++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            PriorityQueue<Edge> queue = new PriorityQueue<>();
-
-            V = Integer.parseInt(st.nextToken());
-            E = Integer.parseInt(st.nextToken());
-            
-            for(int i = 0; i<E; i++) {
-                st = new StringTokenizer(br.readLine());
-                queue.add(new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Long.parseLong(st.nextToken())));
-            }
-            
-            make();
-
-            int cnt = 0; 
-            long cost = 0;
-
-            while(!queue.isEmpty()) {
-                Edge edge = queue.poll();
-                if(union(edge.from, edge.to)) {
-                    cost += (long)edge.v;
-                    if(++cnt >= V-1) break;
-                }
-            }
-
-            sb.append("#").append(T + " ").append(cost).append("\n");
-        }
-        System.out.println(sb.toString());
-
-    }
-
-    static void make() {
-        parents = new int[V+1];
-        Arrays.fill(parents, -1);
-    }
-
-    static int findSet(int a) {
-        if(parents[a] < 0) return a;
-
-        return parents[a] = findSet(parents[a]);
-    }
-
-    static boolean union(int a, int b) {
-        a = findSet(a);
-        b = findSet(b);
-
-        if(a == b) return false;
-
-        parents[a] += parents[b];
-        parents[b] = a;
-        return true;
-    }
-
     static class Edge implements Comparable<Edge>{
-        int from,to;
-        long v;
-
-        public Edge(int from, int to, long v) {
-            this.from = from;
+        int to;
+        int w;
+        public Edge(int to, int w) {
             this.to = to;
-            this.v = v;
+            this.w = w;
         }
-
         @Override
         public int compareTo(Solution.Edge o) {
-            return Long.compare(this.v, o.v);
+            return Integer.compare(this.w, o.w);
         }
+    }
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int TC = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+
+        for(int T = 1; T<=TC; T++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int V = Integer.parseInt(st.nextToken());
+            int E = Integer.parseInt(st.nextToken());
+
+            List<Edge>[] graph = new List[V+1];
+            Arrays.setAll(graph, i -> new ArrayList<>());
+
+            for(int i = 0; i<E; i++) {
+                st = new StringTokenizer(br.readLine());
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+                int w = Integer.parseInt(st.nextToken());
+                graph[a].add(new Edge(b,w));
+                graph[b].add(new Edge(a,w));
+            }
+
+            boolean[] visited = new boolean[V+1];
+            long sum = 0;
+
+            PriorityQueue<Edge> pq = new PriorityQueue<>();
+            pq.add(new Edge(1,0));
+
+            while(!pq.isEmpty()) {
+                Edge edge = pq.poll();
+                if(!visited[edge.to]) {
+                    visited[edge.to] = true;
+                    sum += edge.w;
+
+                    for(Edge e : graph[edge.to]) {
+                        if(!visited[e.to]) {
+                            pq.offer(e);
+                        }
+                    }
+                }
+            }
+            
+            sb.append("#").append(T).append(" " + sum + "\n");
+        }
+        System.out.println(sb.toString());
     }
 }
