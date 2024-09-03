@@ -67,6 +67,18 @@ public class Main {
                     continue;
                 }
 
+                // boolean flag = false;
+                // for(int j = 0; j<=jumped; j++) {
+                //     if(visited[jumped][ny][nx] <= dist+1) {
+                //         flag = true;
+                //     }
+                // }
+
+                // if(flag && map[ny][nx] == 0 ) {
+                //     visited[jumped][ny][nx] = dist+1;
+                //     queue.offer(new Point(nx, ny, jumped));
+                // }
+
                 if(visited[jumped][ny][nx] > dist+1 && map[ny][nx] == 0 ) {
                     visited[jumped][ny][nx] = dist+1;
                     queue.offer(new Point(nx, ny, jumped));
@@ -80,6 +92,19 @@ public class Main {
                     if(nx<0 || ny<0|| nx>=X||ny>=Y) {
                         continue;
                     }
+                    
+
+                    // boolean flag = false;
+                    // for(int j = 0; j<=jumped+1; j++) {
+                    //     if(visited[j][ny][nx] <= dist+1) {
+                    //         flag = true;
+                    //     }
+                    // }
+    
+                    // if(flag && map[ny][nx] == 0 ) {
+                    //     visited[jumped+1][ny][nx] = dist+1;
+                    //     queue.offer(new Point(nx, ny, jumped+1));
+                    // }
     
                     if(visited[jumped+1][ny][nx] > dist+1 && map[ny][nx] == 0 ) {
                         visited[jumped+1][ny][nx] = dist+1;
