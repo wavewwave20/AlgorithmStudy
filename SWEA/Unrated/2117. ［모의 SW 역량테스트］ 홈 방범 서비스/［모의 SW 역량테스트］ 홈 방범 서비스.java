@@ -35,7 +35,7 @@ public class Solution {
             //     K = N+1;
             // }
 
-            for(int k = 1; k<=N+2; k++) {
+            for(int k = 1; k<=N+1; k++) {
                 int cost = k*k + (k-1)*(k-1);
                 for(int y = 0; y<N; y++) {
                     for(int x = 0; x<N; x++) {
